@@ -8,77 +8,69 @@ class TwitterApi
   def initialize
     keys = YAML.load_file('application.yml')
     @client = Twitter::REST::Client.new do |config|
-      config.consumer_key        = keys['CONSUMER_KEY']
-      config.consumer_secret     = keys['CONSUMER_SECRET']
-      config.access_token        = keys['ACCESS_TOKEN']
-      config.access_token_secret = keys['ACCESS_TOKEN_SECRET']
+      config.consumer_key        = 'Ghg3pT5gBZE1fjeqLSsP25gpm'
+      config.consumer_secret     = 'DcR52tLSYkN2JaCwylJUSp8mYd8pX3iz7qoDr0JtxFG7t6Cfdz'
+      config.access_token        = '2349407635-o1PpngbxrjS4vGyV9w3X1VbqBkhXYaCDuOAJLkn'
+      config.access_token_secret = 'v01SAlsURNAvlKj16t8ywlBPFCb6KfAhQKscq7gdoHBGI'
     end
   end
 
-
-  def most_recent_friend(username)
+  def most_recent_friend
     #find the twitter gem method that retrieves a user's friends and grab the most recent friend
-    client.friends(username).attrs[:users][0][:screen_name]
+    client.friends.first
   end
 
   def find_user_for(username)
     #find the twitter gem method that returns the correct user, given a username
-    client.user(username).attrs[:name]
+  
+    client.user(username)
   end
 
   def find_followers_for(username)
     #find the twitter gem method that returns the follows of a given user
-    counter = 0
-    result = client.followers(username)
-    followers = []
-    20.times do 
-      followers << result.attrs[:users][counter][:screen_name]
-      counter += 1
-    end
-    followers
+    client.followers(username).take(10)
+
   end
 
-  def homepage_timeline(username)
+  def homepage_timeline
     #find the twitter gem method that retreives the tweets from a user's timeline.
-    tweets = []
-    client.user_timeline(username).each do |x|
-      tweets << x.text
-    end
-    tweets.each {|x| puts x + "\n\n\n"}
+    client.home_timeline.entries
   end
 
-  def trump(username)
-    #find the twitter gem method that retreives the tweets from a user's timeline.
-    tweets = []
-    client.user_timeline(username).each do |x|
-      tweets << x.text
-    end
+  # def trump(username)
+  #   #find the twitter gem method that retreives the tweets from a user's timeline.
+  #   tweets = []
+  #   client.user_timeline(username).each do |x|
+  #     tweets << x.text
+  #   end
     
-  end
+  # end
   
 end
 
+tweet_client = TwitterApi.new
+tweet_client.find_followers_for('kanyewest')
 #Bonus: 
 # uncomment out the following and read the bonus instructions.
 # remember to comment out the WebMock line of your spec_helper, as the instructions dictate.
 
-tweet_client = TwitterApi.new
-puts "Below is the first method\n"
-puts "-" * 40
-puts tweet_client.most_recent_friend("realdonaldtrump")
-puts ""
-puts ""
-puts "Below is the second method\n"
-puts "-" * 40
-puts tweet_client.find_user_for("realdonaldtrump")
-puts ""
-puts ""
-puts "Below is the third method\n"
-puts "-" * 40
-puts tweet_client.find_followers_for("realdonaldtrump")
-puts ""
-puts ""
-puts "Below is the fourth method\n"
-puts "-" * 40
-puts tweet_client.homepage_timeline("realdonaldtrump")
-
+# tweet_client = TwitterApi.new
+# username = "kanyewest"
+# puts "Below is the first method\n"
+# puts "-" * 40
+# puts tweet_client.most_recent_friend(username)
+# puts ""
+# puts ""
+# puts "Below is the second method\n"
+# puts "-" * 40
+# puts tweet_client.find_user_for(username)
+# puts ""
+# puts ""
+# puts "Below is the third method\n"
+# puts "-" * 40
+# puts tweet_client.find_followers_for(username)
+# puts ""
+# puts ""
+# puts "Below is the fourth method\n"
+# puts "-" * 40
+# puts tweet_client.homepage_timeline(username)
